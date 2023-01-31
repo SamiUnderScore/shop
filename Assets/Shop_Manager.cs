@@ -45,6 +45,8 @@ public class Shop_Manager : MonoBehaviour
         Shop_ProductPanel.buttonsInformationCompleted += ButtonsInformed;
 
         equipButton.onClick.AddListener(EquipProduct);
+        buyByAdsButton.onClick.AddListener(WatchAdsToBuyProduct);
+        buyByCurrencyButton.onClick.AddListener(PayCurrencyToBuyProduct);
     }
 
     private void OnDisable()
@@ -117,7 +119,6 @@ public class Shop_Manager : MonoBehaviour
     void SelectSelectedProduct()
     {
         SelectProduct(GetManagerOfProduct(GetProductTypeSelectedByDefault()).SelectedProduct, GetProductTypeSelectedByDefault());
-        print(GetProductTypeSelectedByDefault());
     }
 
     Shop_ProductRack GetMatchingShopRack(Shop_ProductRack[] productRacks, ProductName matchingName)
@@ -198,6 +199,16 @@ public class Shop_Manager : MonoBehaviour
         {
             GetManagerOfProduct(currentSelectedProduct.productInfo.productName).EquipProduct(currentSelectedProduct.productInfo.id);
         }
+    }
+
+    void WatchAdsToBuyProduct()
+    {
+
+    }
+
+    void PayCurrencyToBuyProduct()
+    {
+
     }
 }
 
