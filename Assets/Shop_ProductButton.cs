@@ -72,7 +72,7 @@ public class Shop_ProductButton : MonoBehaviour
 
     public void ReCheckInfo()
     {
-        if(productInfo.productState == ProductState.lockedAds || productInfo.productState == ProductState.lockedCoins)
+        if(productInfo.productState == ProductState.unlocked || productInfo.productState == ProductState.unlockedEquiped)
         {
             price.text = "";
         }
