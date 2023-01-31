@@ -57,7 +57,7 @@ public class Shop_ProductButton : MonoBehaviour
         productInfo = new Shop_ProductInfo(productName, productState, price, maxVideos, id);
         this.price.text = price.ToString();
         name.text = productName.ToString();
-        ReCheckInfo();
+        VerifyInfo();
     }
 
     public void CheckEquiptionStatus()
@@ -70,7 +70,7 @@ public class Shop_ProductButton : MonoBehaviour
         selectionOverlay.SetActive(isSelected);
     }
 
-    public void ReCheckInfo()
+    public void VerifyInfo()
     {
         if(productInfo.productState == ProductState.unlocked || productInfo.productState == ProductState.unlockedEquiped)
         {
@@ -78,7 +78,7 @@ public class Shop_ProductButton : MonoBehaviour
         }
         else if(productInfo.productState == ProductState.lockedAds)
         {
-            //price.text = $"{Shop_Manager.instance.GetVideosWatchedCountForProduct(productInfo.id, productInfo.productName)}/{productInfo.maxVideos}";
+            price.text = $"{Shop_Manager.instance.GetVideosWatchedCountForProduct(productInfo.id, productInfo.productName)} / {Shop_Manager.instance.GetProductInfo(productInfo.id, productInfo.productName).maxVideos}";
         }
         lockedCoinsOverlay.SetActive(productInfo.productState == ProductState.lockedCoins);
         lockedAdsOverlay.SetActive(productInfo.productState == ProductState.lockedAds);

@@ -47,7 +47,7 @@ public class Shop_ProductPanel : MonoBehaviour
                 productName,
                 Shop_DataSaveSystem.GetStateFromIndex<ProductState>(productStates, i),
                 Shop_Manager.instance.GetManagerOfProduct(productName).GetProductInfo(i).price,
-                0,
+                Shop_Manager.instance.GetManagerOfProduct(productName).GetProductInfo(i).maxVideos,
                 i);
         }
         buttonsInformationCompleted?.Invoke();

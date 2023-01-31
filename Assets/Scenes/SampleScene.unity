@@ -357,10 +357,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   productInfo:
     productName: 0
-    productState: 0
+    productState: 3
     price: 0
     id: 0
-    maxVideos: 0
+    maxVideos: 5
 --- !u!1 &215598475
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,10 +825,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   productInfo:
     productName: 0
-    productState: 0
+    productState: 3
     price: 0
     id: 0
-    maxVideos: 0
+    maxVideos: 6
 --- !u!1 &529132379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,7 +1542,12 @@ MonoBehaviour:
   - {r: 0, g: 0.95686275, b: 0.024804538, a: 1}
   - {r: 0.98929596, g: 1, b: 0, a: 1}
   totalProductsManagersExpected: 0
-  currentSelectedProduct: {fileID: 0}
+  currentSelectedProduct:
+    productName: 0
+    productState: 0
+    price: 0
+    id: 0
+    maxVideos: 0
   buyByCurrencyButton: {fileID: 658206239}
   buyByAdsButton: {fileID: 25723554}
   equipButton: {fileID: 561193645}
@@ -1998,8 +2003,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   productInfo:
     productName: 0
-    productState: 0
-    price: 0
+    productState: 2
+    price: 25
     id: 0
     maxVideos: 0
 --- !u!1 &1763609914
@@ -2216,10 +2221,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   productInfo:
     productName: 0
-    productState: 0
+    productState: 3
     price: 0
     id: 0
-    maxVideos: 0
+    maxVideos: 2
 --- !u!1 &1956512064
 GameObject:
   m_ObjectHideFlags: 0
@@ -2332,8 +2337,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   productInfo:
     productName: 0
-    productState: 0
-    price: 0
+    productState: 2
+    price: 50
     id: 0
     maxVideos: 0
 --- !u!1 &2144049039

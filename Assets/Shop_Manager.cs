@@ -207,7 +207,8 @@ public class Shop_Manager : MonoBehaviour
         if(currentSelectedProduct.productState == ProductState.lockedAds)
         {
             // Increment to watch videos Counter of the selected product
-            GetManagerOfProduct(currentSelectedProduct.productName).IncrementWatchedVideosCounter(currentSelectedProduct.id);
+            GetManagerOfProduct(currentSelectedProduct.productName).WatchAdsToBuyProduct(currentSelectedProduct.id);
+                
         }
     }
 
@@ -218,8 +219,7 @@ public class Shop_Manager : MonoBehaviour
 
     public int GetVideosWatchedCountForProduct(int id, ProductName productName)
     {
-        GetManagerOfProduct(productName).GetVideosWatchedCountForProduct(id);
-        return 0;
+        return GetManagerOfProduct(productName).GetVideosWatchedCountForProduct(id);
     }
 }
 
@@ -267,12 +267,9 @@ public class Shop_ProductsManager
     public void UpdateState(int _productId, ProductState changedState)
     {
         int[] statesArray = Shop_DataSaveSystem.ConvertToIntArray(GetDefaultProductStates());
-        Debug.Log(statesArray.ToCommaSeparatedString());
         statesArray[_productId] = Shop_DataSaveSystem.ConvertEnumToIntRepresentation(changedState);
-        Debug.Log(statesArray.ToCommaSeparatedString());
         SaveStatesArray(Shop_DataSaveSystem.Stringify(statesArray));
         SyncData();
-        Shop_Manager.instance.SetButtonsInformation(this, GetProductStatesArray());
     }
 
 
@@ -294,6 +291,7 @@ public class Shop_ProductsManager
         {
             productRack.products[i].productInfo = productPanel.GetShopProductButton(i).productInfo;
         }
+        
     }
 
     public void EquipProduct(int _productId)
@@ -301,7 +299,16 @@ public class Shop_ProductsManager
         UpdateState(EquipedProduct, ProductState.unlocked);
         EquipedProduct = _productId;
         UpdateState(EquipedProduct, ProductState.unlockedEquiped);
-        productPanel.GetShopProductButton(_productId).ReCheckInfo();
+        Shop_Manager.instance.SetButtonsInformation(this, GetProductStatesArray());
+        //productPanel.GetShopProductButton(_productId).VerifyInfo();
+    }
+
+    public void WatchAdsToBuyProduct(int _productId)
+    {
+        IncrementWatchedVideosCounter(_productId);
+        Shop_Manager.instance.SetButtonsInformation(this, GetProductStatesArray());
+        
+        //productPanel.GetShopProductButton(_productId).VerifyInfo();
     }
 
     public void BuyProduct(int _productId)
@@ -381,9 +388,6 @@ public class Shop_ProductsManager
     public int GetVideosWatchedCountForProduct(int _productId)
     {
         string watchedVideosOfAllProducts = GetWatchedVideosOfAllProducts();
-        Debug.Log("videosToWatch" + watchedVideosOfAllProducts);
-        Debug.Log($"{productName}videosToWatch");
-
         return Shop_DataSaveSystem.ConvertToIntArray(watchedVideosOfAllProducts)[_productId];
     }
 
@@ -392,6 +396,7 @@ public class Shop_ProductsManager
         int[] incrementedArray = Shop_DataSaveSystem.ConvertToIntArray(GetWatchedVideosOfAllProducts());
         incrementedArray[_productId] = incrementedArray[_productId] + 1;
         SetWatchedVideosCountForAllProducts(incrementedArray);
+        Debug.Log(incrementedArray.ToCommaSeparatedString());
     }
 
     public string GetWatchedVideosOfAllProducts()
@@ -406,8 +411,7 @@ public class Shop_ProductsManager
 
     public void SetWatchedVideosCountForAllProducts(string watchedVideosString)
     {
-        PlayerPrefs.GetString(
-
+        PlayerPrefs.SetString(
                 $"{productName}videosToWatch",
                 watchedVideosString
             );
