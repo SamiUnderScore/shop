@@ -79,6 +79,14 @@ public class Shop_ProductButton : MonoBehaviour
         else if(productInfo.productState == ProductState.lockedAds)
         {
             price.text = $"{Shop_Manager.instance.GetVideosWatchedCountForProduct(productInfo.id, productInfo.productName)} / {Shop_Manager.instance.GetProductInfo(productInfo.id, productInfo.productName).maxVideos}";
+            if(Shop_Manager.instance.GetVideosWatchedCountForProduct(productInfo.id, productInfo.productName) >= Shop_Manager.instance.GetProductInfo(productInfo.id, productInfo.productName).maxVideos)
+            {
+                Shop_Manager.instance.UnlockProduct(productInfo.id, productInfo.productName);
+            }
+        }
+        else if(productInfo.productState == ProductState.lockedCoins)
+        {
+
         }
         lockedCoinsOverlay.SetActive(productInfo.productState == ProductState.lockedCoins);
         lockedAdsOverlay.SetActive(productInfo.productState == ProductState.lockedAds);

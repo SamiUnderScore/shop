@@ -41,6 +41,7 @@ public class Shop_ProductPanel : MonoBehaviour
 
     public void SetButtonsInfo(ProductName productName, string productStates)
     {
+        
         for (int i = 0; i < buttons.Count; i++)
         {
             buttons[i].SetInfo(

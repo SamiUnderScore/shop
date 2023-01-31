@@ -56,6 +56,7 @@ public class Shop_Manager : MonoBehaviour
 
         equipButton.onClick.RemoveListener(EquipProduct);
         buyByAdsButton.onClick.RemoveListener(WatchAdsToBuyProduct);
+        buyByCurrencyButton.onClick.RemoveListener(PayCurrencyToBuyProduct);
     }
 
     private void Start()
@@ -156,6 +157,14 @@ public class Shop_Manager : MonoBehaviour
         //GetManagerOfProduct(_productName).UpdateState(id, ProductState.unlockedEquiped);
     }
 
+    public void UnlockProduct(int id, ProductName _productName)
+    {
+        GetManagerOfProduct(_productName).UnlockProduct(id);
+        currentSelectedProduct = GetManagerOfProduct(_productName).GetSelectedProduct().productInfo;
+        currentSelectedProductName = currentSelectedProduct.productName;
+        ActionOnSelection(currentSelectedProduct);
+    }
+
     public Shop_ProductInfo GetProductInfo(int id, ProductName _productName)
     {
         return GetManagerOfProduct(_productName).GetProductInfo(id);
@@ -214,7 +223,9 @@ public class Shop_Manager : MonoBehaviour
 
     void PayCurrencyToBuyProduct()
     {
-
+        UnlockProduct(currentSelectedProduct.id, currentSelectedProduct.productName);
+        
+        //TODO: Payment
     }
 
     public int GetVideosWatchedCountForProduct(int id, ProductName productName)
@@ -311,9 +322,10 @@ public class Shop_ProductsManager
         //productPanel.GetShopProductButton(_productId).VerifyInfo();
     }
 
-    public void BuyProduct(int _productId)
+    public void UnlockProduct(int _productId)
     {
-
+        UpdateState(_productId, ProductState.unlocked);
+        Shop_Manager.instance.SetButtonsInformation(this, GetProductStatesArray());
     }
 
     void SelectButtonFromPanel(int _productId)
@@ -397,6 +409,7 @@ public class Shop_ProductsManager
         incrementedArray[_productId] = incrementedArray[_productId] + 1;
         SetWatchedVideosCountForAllProducts(incrementedArray);
         Debug.Log(incrementedArray.ToCommaSeparatedString());
+        //TODO: 
     }
 
     public string GetWatchedVideosOfAllProducts()
