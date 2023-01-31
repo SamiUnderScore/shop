@@ -29,15 +29,16 @@ public class Shop_ProductInfo
     public ProductState productState;
     public int price;
     public int id;
-    public int maxVideos = 5;
+    public int maxVideos;
     
 
     Shop_ProductInfo() { }
 
-    public Shop_ProductInfo(ProductName productName, ProductState productState, int price, int id)
+    public Shop_ProductInfo(ProductName productName, ProductState productState, int price, int maxVideos, int id)
     {
         this.productName = productName;
         this.productState = productState;
+        this.maxVideos = maxVideos;
         this.price = price;
         this.id = id;
     }

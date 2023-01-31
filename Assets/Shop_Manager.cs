@@ -1,8 +1,8 @@
 using Assets.Enums;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +23,7 @@ public class Shop_Manager : MonoBehaviour
     [SerializeField] private List<Shop_ProductsManager> shopProductManagers;
     public Color[] colors;
     public int totalProductsManagersExpected;
-    public Shop_Product currentSelectedProduct;
+    public Shop_ProductInfo currentSelectedProduct;
     [SerializeField] private Button buyByCurrencyButton, buyByAdsButton, equipButton;
 
 
@@ -55,6 +55,7 @@ public class Shop_Manager : MonoBehaviour
         Shop_ProductPanel.buttonsInformationCompleted -= ButtonsInformed;
 
         equipButton.onClick.RemoveListener(EquipProduct);
+        buyByAdsButton.onClick.RemoveListener(WatchAdsToBuyProduct);
     }
 
     private void Start()
@@ -147,8 +148,8 @@ public class Shop_Manager : MonoBehaviour
     public void SelectProduct(int id, ProductName _productName)
     {
         GetManagerOfProduct(_productName).SelectProduct(id);
-        currentSelectedProduct = GetManagerOfProduct(_productName).GetSelectedProduct();
-        currentSelectedProductName = currentSelectedProduct.productInfo.productName;
+        currentSelectedProduct = GetManagerOfProduct(_productName).GetSelectedProduct().productInfo;
+        currentSelectedProductName = currentSelectedProduct.productName;
         ActionOnSelection(currentSelectedProduct);
 
         //just to check states being changed;
@@ -160,22 +161,22 @@ public class Shop_Manager : MonoBehaviour
         return GetManagerOfProduct(_productName).GetProductInfo(id);
     }
 
-    public void ActionOnSelection(Shop_Product product)
+    public void ActionOnSelection(Shop_ProductInfo product)
     {
         HideAllButtons();
-        if (product.productInfo.productState == ProductState.unlockedEquiped)
+        if (product.productState == ProductState.unlockedEquiped)
         {
             return;
         }
-        else if(product.productInfo.productState == ProductState.unlocked)
+        else if(product.productState == ProductState.unlocked)
         {
             ShowButton(equipButton);
         }
-        else if (product.productInfo.productState == ProductState.lockedCoins)
+        else if (product.productState == ProductState.lockedCoins)
         {
             ShowButton(buyByCurrencyButton);
         }
-        else if (product.productInfo.productState == ProductState.lockedAds)
+        else if (product.productState == ProductState.lockedAds)
         {
             ShowButton(buyByAdsButton);
         }
@@ -195,20 +196,30 @@ public class Shop_Manager : MonoBehaviour
 
     void EquipProduct()
     {
-        if(currentSelectedProduct.productInfo.productState == ProductState.unlocked)
+        if(currentSelectedProduct.productState == ProductState.unlocked)
         {
-            GetManagerOfProduct(currentSelectedProduct.productInfo.productName).EquipProduct(currentSelectedProduct.productInfo.id);
+            GetManagerOfProduct(currentSelectedProduct.productName).EquipProduct(currentSelectedProduct.id);
         }
     }
 
     void WatchAdsToBuyProduct()
     {
-
+        if(currentSelectedProduct.productState == ProductState.lockedAds)
+        {
+            // Increment to watch videos Counter of the selected product
+            GetManagerOfProduct(currentSelectedProduct.productName).IncrementWatchedVideosCounter(currentSelectedProduct.id);
+        }
     }
 
     void PayCurrencyToBuyProduct()
     {
 
+    }
+
+    public int GetVideosWatchedCountForProduct(int id, ProductName productName)
+    {
+        GetManagerOfProduct(productName).GetVideosWatchedCountForProduct(id);
+        return 0;
     }
 }
 
@@ -256,6 +267,7 @@ public class Shop_ProductsManager
     public void UpdateState(int _productId, ProductState changedState)
     {
         int[] statesArray = Shop_DataSaveSystem.ConvertToIntArray(GetDefaultProductStates());
+        Debug.Log(statesArray.ToCommaSeparatedString());
         statesArray[_productId] = Shop_DataSaveSystem.ConvertEnumToIntRepresentation(changedState);
         Debug.Log(statesArray.ToCommaSeparatedString());
         SaveStatesArray(Shop_DataSaveSystem.Stringify(statesArray));
@@ -292,7 +304,7 @@ public class Shop_ProductsManager
         productPanel.GetShopProductButton(_productId).ReCheckInfo();
     }
 
-    public void UnlockProduct(int _productId)
+    public void BuyProduct(int _productId)
     {
 
     }
@@ -365,5 +377,60 @@ public class Shop_ProductsManager
     {
         PlayerPrefs.SetString($"{productName}states", statesStringifiedArray);
     }
-    
+
+    public int GetVideosWatchedCountForProduct(int _productId)
+    {
+        string watchedVideosOfAllProducts = GetWatchedVideosOfAllProducts();
+        Debug.Log("videosToWatch" + watchedVideosOfAllProducts);
+        Debug.Log($"{productName}videosToWatch");
+
+        return Shop_DataSaveSystem.ConvertToIntArray(watchedVideosOfAllProducts)[_productId];
+    }
+
+    public void IncrementWatchedVideosCounter(int _productId)
+    {
+        int[] incrementedArray = Shop_DataSaveSystem.ConvertToIntArray(GetWatchedVideosOfAllProducts());
+        incrementedArray[_productId] = incrementedArray[_productId] + 1;
+        SetWatchedVideosCountForAllProducts(incrementedArray);
+    }
+
+    public string GetWatchedVideosOfAllProducts()
+    {
+        return
+            PlayerPrefs.GetString(
+
+                $"{productName}videosToWatch",
+                Shop_DataSaveSystem.Stringify(GetDefaultVideosToWatch(ref productRack.products))
+            );
+    }
+
+    public void SetWatchedVideosCountForAllProducts(string watchedVideosString)
+    {
+        PlayerPrefs.GetString(
+
+                $"{productName}videosToWatch",
+                watchedVideosString
+            );
+    }
+
+    public void SetWatchedVideosCountForAllProducts(int[] watchedVideosString)
+    {
+        PlayerPrefs.SetString(
+            
+                $"{productName}videosToWatch",
+                Shop_DataSaveSystem.Stringify(watchedVideosString)
+            );
+    }
+
+    int[] GetDefaultVideosToWatch(ref Shop_Product[] products)
+    {
+        int[] videosCount = new int[products.Length];
+        for (int i = 0; i < videosCount.Length; i++)
+        {
+            videosCount[i] = 0;
+        }
+        return videosCount;
+    }
+
+
 }

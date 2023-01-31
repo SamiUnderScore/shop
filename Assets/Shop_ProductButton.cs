@@ -51,10 +51,10 @@ public class Shop_ProductButton : MonoBehaviour
         this.productInfo.productState = ProductState.unlockedEquiped;
     }
 
-    public void SetInfo(ProductName productName, ProductState productState, int price, int id)
+    public void SetInfo(ProductName productName, ProductState productState, int price, int maxVideos, int id)
     {
         GetComponent<Image>().color = Shop_Manager.instance.colors[id];
-        productInfo = new Shop_ProductInfo(productName, productState, price, id);
+        productInfo = new Shop_ProductInfo(productName, productState, price, maxVideos, id);
         this.price.text = price.ToString();
         name.text = productName.ToString();
         ReCheckInfo();
@@ -75,6 +75,10 @@ public class Shop_ProductButton : MonoBehaviour
         if(productInfo.productState == ProductState.unlocked || productInfo.productState == ProductState.unlockedEquiped)
         {
             price.text = "";
+        }
+        else if(productInfo.productState == ProductState.lockedAds)
+        {
+            //price.text = $"{Shop_Manager.instance.GetVideosWatchedCountForProduct(productInfo.id, productInfo.productName)}/{productInfo.maxVideos}";
         }
         lockedCoinsOverlay.SetActive(productInfo.productState == ProductState.lockedCoins);
         lockedAdsOverlay.SetActive(productInfo.productState == ProductState.lockedAds);
